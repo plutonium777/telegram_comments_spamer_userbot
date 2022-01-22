@@ -4,53 +4,42 @@
 # |  ___/| | | | | __/ _ \| '_ \| | | | | '_ ` _ \ 
 # | |    | | |_| | || (_) | | | | | |_| | | | | | |
 # |_|    |_|\__,_|\__\___/|_| |_|_|\__,_|_| |_| |_|
+
+
 from asyncio import sleep
-import time
 from datetime import datetime
 from pyrogram import Client, filters
-from pyrogram.errors import ChatSendMediaForbidden, SlowmodeWait, FloodWait, UsernameNotOccupied, \
-    UserAlreadyParticipant, UsernameInvalid
 
-# Join
-one_time_sub_limit = 10
-delay = 600
-# Spam
-spam_posts = ["1st"]
-
+app = Client("my_account")
+spam_text = '1st'
 used_filters = filters.channel
-last_media_group_id = None
-app = Client("my_account", workers=1)
+send_as_chat = None
 
 
 @app.on_message(used_filters)
 async def spam(_, message):
     if (message.edit_date is None or (datetime.utcfromtimestamp(message.edit_date) - datetime.utcfromtimestamp(
             message.date)).total_seconds() > 5):
-        # print("Raw message caught..") DEV
-        return
-
-    global last_media_group_id
-
-    if (last_media_group_id == message.media_group_id) and message.media_group_id:
-        # print("2+ photo message caught.. ", message.media_group_id) DEV
         return
 
     linked = await get_linked(message)
     await sleep(0.25)
 
+    global send_as_chat
+    if not send_as_chat:
+        chats = await app.get_send_as_chats(linked)
+        print("Available chats:")
+        for index, chat in enumerate(chats, start=1):
+            print(str(index) + ": " + chat.title)
+        answer = int(input("Write ID of chat and press Enter: "))
+        send_as_chat = chats[answer-1].id
+    await app.set_send_as_chat(linked, send_as_chat)
+
     msg = await app.get_history(linked, limit=1)
     await sleep(0.25)
 
-    for post in spam_posts:
-        try:
-            await app.send_message(msg[0].chat.id, post, reply_to_message_id=msg[0].message_id)
-        except ChatSendMediaForbidden:
-            await sleep(0.25)
-            await app.send_message(msg[0].chat.id, post, reply_to_message_id=msg[0].message_id)
-        except SlowmodeWait:
-            continue
-        await sleep(0.25)
-    last_media_group_id = message.media_group_id
+    await msg[0].reply_text(spam_text)
+    await sleep(0.25)
     print("Answered to: " + message.chat.title)
 
 
