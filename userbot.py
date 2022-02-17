@@ -10,13 +10,16 @@ from asyncio import sleep
 from datetime import datetime
 from pyrogram import Client, filters
 
-app = Client("my_account")
+app: Client = Client("my_account", workers=1)
 spam_text = '1st'
-used_filters = filters.channel
-send_as_chat = None
+send_chat = None
 
 
-@app.on_message(used_filters)
+with app:
+    print('Started! Wait for a new message to set up the bot.')
+
+
+@app.on_message(filters.channel)
 async def spam(_, message):
     if (message.edit_date is None or (datetime.utcfromtimestamp(message.edit_date) - datetime.utcfromtimestamp(
             message.date)).total_seconds() > 5):
@@ -25,22 +28,28 @@ async def spam(_, message):
     linked = await get_linked(message)
     await sleep(0.25)
 
-    global send_as_chat
-    if not send_as_chat:
-        chats = await app.get_send_as_chats(linked)
-        print("Available chats:")
-        for index, chat in enumerate(chats, start=1):
-            print(str(index) + ": " + chat.title)
-        answer = int(input("Write ID of chat and press Enter: "))
-        send_as_chat = chats[answer-1].id
-    await app.set_send_as_chat(linked, send_as_chat)
+    await init_sender(linked)
+    await sleep(0.25)
 
     msg = await app.get_history(linked, limit=1)
     await sleep(0.25)
 
     await msg[0].reply_text(spam_text)
     await sleep(0.25)
+
     print("Answered to: " + message.chat.title)
+
+
+async def init_sender(_chat):
+    global send_chat
+    if not send_chat:
+        chats = await app.get_send_as_chats(_chat)
+        print("Available chats:")
+        for index, chat in enumerate(chats):
+            chat_name = chat.title if chat.first_name is None else chat.first_name
+            print(str(index) + ": " + chat_name)
+        answer = int(input("Write ID of chat and press Enter: "))
+        send_chat = chats[answer].id
 
 
 async def get_linked(msg):
