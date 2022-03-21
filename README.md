@@ -103,7 +103,7 @@ spam_posts = [TextPost("1st!", delay=2), PicturePost("nature.jpg", "nature", del
 ```
 ![](readme/DelayedPost.png)
 
-#Markdown
+# Markdown
 Both methods are allowed:
 ![](readme/markdown_dflt.png)
 ![](readme/markdown_html.png)
