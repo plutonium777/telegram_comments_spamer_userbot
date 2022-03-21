@@ -1,7 +1,8 @@
-import logging
 import random
+import logging
 from asyncio import sleep
-from pyrogram.errors import SlowmodeWait, ChannelPrivate
+import pyrogram
+from pyrogram.errors import SlowmodeWait
 
 
 def reply(func):
@@ -21,22 +22,24 @@ def reply(func):
 
 
 class TextPost:
-    def __init__(self, text):
+    def __init__(self, text, delay=0):
         self.text = text
+        self.delay = delay
 
     @reply
-    async def reply_to(self, message):
-        await message.reply_text(self.text)
+    async def reply_to(self, message: pyrogram.types.Message, app: pyrogram.Client):
+        await app.send_message(message.chat.id, self.text, reply_to_message_id=message.message_id, schedule_date=message.date + self.delay)
 
 
-class PicturePost(TextPost):
-    def __init__(self, picture, text=None):
+class PicturePost:
+    def __init__(self, picture, text=None, delay=0):
         self.picture = picture
         self.text = text
+        self.delay = delay
 
     @reply
-    async def reply_to(self, message):
-        await message.reply_photo(self.picture, caption=self.text)
+    async def reply_to(self, message: pyrogram.types.Message, app: pyrogram.Client):
+        await app.send_photo(message.chat.id, self.picture, caption=self.text, reply_to_message_id=message.message_id, schedule_date=message.date + self.delay)
 
 
 class RandomPost:
@@ -44,27 +47,15 @@ class RandomPost:
     def __init__(self, *args):
         self.posts = args
 
-    async def reply_to(self, message):
-        await random.choice(self.posts).reply_to(message)
-
-
-class DelayedPost:
-
-    def __init__(self, delay=10, *args):
-        self.posts = args
-        self.delay = delay
-
-    async def reply_to(self, message):
-        logging.warning(f"Sleeping {self.delay}s to send delayed post")
-        await sleep(self.delay)
-        for post in self.posts:
-            await post.reply_to(message)
+    async def reply_to(self, message: pyrogram.types.Message, app: pyrogram.Client):
+        await random.choice(self.posts).reply_to(message, app)
 
 
 class StickerPost:
-    def __init__(self, sticker_id):
+    def __init__(self, sticker_id, delay=0):
         self.sticker_id = sticker_id
+        self.delay = delay
 
     @reply
-    async def reply_to(self, message):
-        await message.reply_sticker(self.sticker_id)
+    async def reply_to(self, message: pyrogram.types.Message, app: pyrogram.Client):
+        await app.send_sticker(message.chat.id, sticker=self.sticker_id, reply_to_message_id=message.message_id, schedule_date=message.date + self.delay)

@@ -83,15 +83,15 @@ Example:
 spam_posts = [TextPost("Some text!"), PicturePost("nat.jpg", "And a beautiful nature!")]
 ```
 ![](readme/MultiPost.png)
-## DelayedPost (beta)
+## DelayedPost
 
 Syntax:
 ```python
-spam_posts = [DelayedPost(delay(seconds), posts)]
+spam_posts = [post(..., delay=seconds)]
 ```
 Example:
 ```python
-spam_posts = [DelayedPost(60, TextPost("This post will be sent after minute from publication."))]
+spam_posts = [TextPost("1st!", delay=2), PicturePost("nature.jpg", "nature", delay=4)]
 ```
 ![](readme/DelayedPost.png)
 ## Used Python modules

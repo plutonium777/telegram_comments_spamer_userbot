@@ -13,7 +13,7 @@ from asyncio import sleep
 from datetime import datetime
 from pyrogram import Client, filters
 from pyrogram.errors.exceptions import ChannelPrivate
-from modules.posts import TextPost, PicturePost, StickerPost, RandomPost, DelayedPost
+from modules.posts import TextPost, PicturePost, StickerPost, RandomPost
 
 # Channel Spam - switch between profile (False) and channel (True)
 spam_from_channel = False
@@ -24,7 +24,7 @@ last_media_group = 123
 # Spam Posts - stores posts to spam, supported types: TextPost, PicturePost, StickerPost, RandomPost
 spam_posts = [TextPost("1st!")]
 # App - stores Pyrogram instance
-app: Client = Client("data/my_account", config_file="data/config.ini", workers=1)
+app = Client("data/my_account", config_file="data/config.ini", workers=1)
 # Delay - delay between requests
 delay = 0
 sys.tracebacklimit = 0
@@ -69,7 +69,7 @@ async def answer(_, message):
 
     await sleep_if_required(delay)
     for post in spam_posts:
-        await post.reply_to(message_to_answer)
+        await post.reply_to(message_to_answer, app)
 
     logger.info(f"|{message.chat.title}|:Answered.")
 
