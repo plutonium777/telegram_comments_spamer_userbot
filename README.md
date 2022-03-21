@@ -14,7 +14,12 @@ python userbot.py
 ```
 *Don't forget to configure data/config.ini file and variables in userbot.py*
 
-# Post types
+## Spam as channel
+**_Set spam_from_channel = True, after first incoming message with comments section select your channel (it must be public)_**
+<h1 align="center">
+Post Types
+</h1>
+
 ## TextPost
 Syntax:
 ```python
@@ -94,6 +99,11 @@ Example:
 spam_posts = [TextPost("1st!", delay=2), PicturePost("nature.jpg", "nature", delay=4)]
 ```
 ![](readme/DelayedPost.png)
+
+#Markdown
+Both methods are allowed:
+![](readme/markdown_dflt.png)
+![](readme/markdown_html.png)
 ## Used Python modules
 ```
 pyrogram
