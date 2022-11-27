@@ -14,8 +14,6 @@ python userbot.py
 ```
 *Don't forget to configure data/config.ini file and variables in userbot.py*
 
-## Spam as channel
-**_Set spam_from_channel = True, after first incoming message with comments section select your channel (it must be public)_**
 ## Delay
 **_Delay = 0.25, You can increase delay between interactions with Telegram servers if your account dying fast_**
 
