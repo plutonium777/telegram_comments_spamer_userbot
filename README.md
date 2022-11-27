@@ -111,5 +111,5 @@ pyrogram
 tgcrypto
 ```
 
-## Have any questions ?
+## Any questions?
 * Ask me on [Telegram](https://t.me/wasd_plutonium)
