@@ -1,4 +1,5 @@
 Внимание! Насколько мне известно, сейчас Pyrogram перестали обновлять и он не работает. Pyrogram - основа данного бота. Так как я не хочу создавать конкуренцию среди спамеров, данный софт обновлен не будет. Есть платная версия, я разработчик - https://github.com/plutonium777/enhanced-comments-md/blob/main/README.md . Спасибо всем, кто оставлял отзывы на счет этого спамера и благодарил!
+
 Attention! As far as I know, Pyrogram has now stopped being updated and does not work. Pyrogram is the main framework of this bot. Since I do not want to create competition in spam, this software will not be updated. There is a paid version, I am a developer - https://github.com/plutonium777/enhanced-comments-md/blob/main/README.md. Thanks to everyone who left feedback on this spammer and said me thanks as well!
 <h1 align="center">
 Comments Spam Bot
